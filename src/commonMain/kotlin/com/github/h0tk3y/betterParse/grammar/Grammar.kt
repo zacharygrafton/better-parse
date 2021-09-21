@@ -38,9 +38,19 @@ public abstract class Grammar<out T> : Parser<T> {
     )
 
     protected operator fun <T> Parser<T>.provideDelegate(thisRef: Grammar<*>, property: KProperty<*>): Parser<T> =
-        also { _parsers.add(it) }
+        also {
+            _parsers.add(it)
+        }
+
+    protected operator fun <T> Grammar<T>.provideDelegate(thisRef: Grammar<*>, property: KProperty<*>): Grammar<T> =
+        also {
+            _parsers.add(it)
+            _tokens.addAll(it.tokens)
+        }
 
     protected operator fun <T> Parser<T>.getValue(thisRef: Grammar<*>, property: KProperty<*>): Parser<T> = this
+
+    protected operator fun <T> Grammar<T>.getValue(thisRef: Grammar<*>, property: KProperty<*>): Grammar<T> = this
 
     protected operator fun Token.provideDelegate(thisRef: Grammar<*>, property: KProperty<*>): Token =
         also {
